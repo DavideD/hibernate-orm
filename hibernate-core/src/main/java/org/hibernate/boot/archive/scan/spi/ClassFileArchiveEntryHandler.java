@@ -49,6 +49,7 @@ public class ClassFileArchiveEntryHandler implements ArchiveEntryHandler {
 
 	@Override
 	public void handleEntry(ArchiveEntry entry, ArchiveContext context) {
+
 		final ClassDescriptor classDescriptor = toClassDescriptor( entry );
 
 		if ( classDescriptor.getCategorization() == ClassDescriptor.Categorization.OTHER ) {
