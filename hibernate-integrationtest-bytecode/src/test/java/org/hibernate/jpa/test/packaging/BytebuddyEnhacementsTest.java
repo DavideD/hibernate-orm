@@ -40,7 +40,6 @@ import static org.junit.Assert.assertNotNull;
 
 @RunWith( Arquillian.class )
 public class BytebuddyEnhacementsTest {
-	private static final String PREFIX = "_DEFAULT___DEFAULT__";
 	private static final String ARCHIVE_NAME = "bytecode-enhancements.war";
 	private static final String UNIT_NAME = "primaryPU";
 
@@ -79,17 +78,19 @@ public class BytebuddyEnhacementsTest {
 	public void testAssociationManagementEnhancement() throws Exception {
 		Book lostConnections = new Book( 5L, "Lost Connections: Why You’re Depressed and How to Find Hope", " 978-1408878729" );
 		Person johannHari = new Person( 5L, "Johann Hari" );
+
 		johannHari.getBooks().add( lostConnections );
 		// Normally you should also have:
-		// saga.setAuthor( brianVaughan );
+		// lostConnections.setAuthor( johannHari );
 		// but in this case it will work because bytecode enhancements are enabled
 
-		assertNotNull( lostConnections.getAuthor() );
+			assertNotNull( lostConnections.getAuthor() );
 	}
 
 	private static Asset manifest() {
 		String manifest = Descriptors.create( ManifestDescriptor.class )
 				.version( "1.0" )
+				.attribute( "Dependencies", "org.hibernate.orm:5.4.10-SNAPSHOT" )
 				.exportAsString();
 		return new StringAsset( manifest );
 	}

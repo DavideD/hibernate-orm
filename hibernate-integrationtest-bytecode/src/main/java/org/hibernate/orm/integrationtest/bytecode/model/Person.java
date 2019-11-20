@@ -10,6 +10,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
 
@@ -21,7 +22,7 @@ public class Person {
 
 	private String name;
 
-	@OneToMany(mappedBy = "author", targetEntity = Person.class)
+	@OneToMany(mappedBy = "author", targetEntity = Book.class)
 	private List<Book> books = new ArrayList<>();
 
 	public Person() {
