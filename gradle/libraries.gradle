@@ -50,6 +50,9 @@ ext {
             // Antlr
             antlr:          'antlr:antlr:2.7.7',
 
+            // assertJ
+            assertJ:        'org.assertj:assertj-core:3.11.1',
+
             // Annotations
             commons_annotations: "org.hibernate.common:hibernate-commons-annotations:${hibernateCommonsVersion}",
             jandex:         'org.jboss:jandex:2.1.1.Final',

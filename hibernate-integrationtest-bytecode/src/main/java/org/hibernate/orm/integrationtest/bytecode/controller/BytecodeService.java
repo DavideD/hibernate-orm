@@ -29,6 +29,11 @@ public class BytecodeService {
 		return em.find( Person.class, authorId );
 	}
 
+	public Book bookReference( Long bookId ) {
+		return em.getReference( Book.class, bookId );
+	}
+
+
 	public Person findAuthorForBook(Book book) {
 		return em.find( Book.class, book.getId() ).getAuthor();
 	}
