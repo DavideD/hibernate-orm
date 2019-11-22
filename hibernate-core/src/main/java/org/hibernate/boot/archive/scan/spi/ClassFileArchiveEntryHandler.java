@@ -60,30 +60,31 @@ public class ClassFileArchiveEntryHandler implements ArchiveEntryHandler {
 	}
 
 	private ClassDescriptor toClassDescriptor(ArchiveEntry entry) {
-		final InputStream inputStream = entry.getStreamAccess().accessInputStream();
-		final DataInputStream dataInputStream = new DataInputStream( inputStream );
-		try {
-			Indexer indexer = new Indexer();
-			ClassInfo classInfo = indexer.index( dataInputStream );
-			Index index = indexer.complete();
-			return toClassDescriptor( classInfo, index, entry );
-		}
-		catch (IOException e) {
-			throw new ArchiveException( "Could not build ClassInfo", e );
-		}
-		finally {
-			try {
-				dataInputStream.close();
-			}
-			catch (Exception ignore) {
-			}
-
-			try {
-				inputStream.close();
-			}
-			catch (IOException ignore) {
-			}
-		}
+		throw new RuntimeException( "Hot Daaaaamn!" );
+//		final InputStream inputStream = entry.getStreamAccess().accessInputStream();
+//		final DataInputStream dataInputStream = new DataInputStream( inputStream );
+//		try {
+//			Indexer indexer = new Indexer();
+//			ClassInfo classInfo = indexer.index( dataInputStream );
+//			Index index = indexer.complete();
+//			return toClassDescriptor( classInfo, index, entry );
+//		}
+//		catch (IOException e) {
+//			throw new ArchiveException( "Could not build ClassInfo", e );
+//		}
+//		finally {
+//			try {
+//				dataInputStream.close();
+//			}
+//			catch (Exception ignore) {
+//			}
+//
+//			try {
+//				inputStream.close();
+//			}
+//			catch (IOException ignore) {
+//			}
+//		}
 	}
 
 	private ClassDescriptor toClassDescriptor(ClassInfo classInfo, Index index, ArchiveEntry entry) {

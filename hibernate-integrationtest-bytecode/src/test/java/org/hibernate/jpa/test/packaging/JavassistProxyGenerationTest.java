@@ -3,7 +3,6 @@ package org.hibernate.jpa.test.packaging;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Properties;
-import javax.persistence.EntityManagerFactory;
 
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
@@ -15,15 +14,14 @@ import org.hibernate.cfg.AvailableSettings;
 import org.hibernate.orm.integrationtest.bytecode.model.Book;
 import org.hibernate.orm.integrationtest.bytecode.model.Person;
 
-import org.junit.After;
 import org.junit.Test;
 
-public class ProxyGenerationWithByteBuddyTest {
+public class JavassistProxyGenerationTest {
 
 	@Test
 	public void testProxyGeneration() throws IOException {
 		Properties properties = readProperties();
-		properties.setProperty( AvailableSettings.BYTECODE_PROVIDER, "bytebuddy" );
+		properties.setProperty( AvailableSettings.BYTECODE_PROVIDER, "javassist" );
 
 		StandardServiceRegistryBuilder registryBuilder = new StandardServiceRegistryBuilder();
 		registryBuilder.applySettings( properties );
@@ -52,7 +50,7 @@ public class ProxyGenerationWithByteBuddyTest {
 	}
 
 	private static Properties readProperties() throws IOException {
-		try (InputStream propertiesStream = ProxyGenerationWithByteBuddyTest.class.getResourceAsStream( "/hibernate.properties" )) {
+		try (InputStream propertiesStream = JavassistProxyGenerationTest.class.getResourceAsStream( "/hibernate.properties" )) {
 			Properties properties = new Properties();
 			properties.load( propertiesStream );
 			return properties;

@@ -34,9 +34,8 @@ dependencies {
 	provided libraries.jboss_ejb_spec_jar
 	provided libraries.jboss_annotation_spec_jar
 
-	testCompile("org.assertj:assertj-core:3.11.1")
 	testCompile project( ':hibernate-testing' )
-//	testCompile libraries.assertJ
+
 	testCompile libraries.shrinkwrap_api
 	testCompile libraries.shrinkwrap
 	testCompile libraries.shrinkwrap_descriptors_api_javaee

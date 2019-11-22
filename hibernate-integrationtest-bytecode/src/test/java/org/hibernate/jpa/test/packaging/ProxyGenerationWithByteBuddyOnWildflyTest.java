@@ -32,6 +32,7 @@ import org.jboss.shrinkwrap.api.ShrinkWrap;
 import org.jboss.shrinkwrap.api.asset.Asset;
 import org.jboss.shrinkwrap.api.asset.EmptyAsset;
 import org.jboss.shrinkwrap.api.asset.StringAsset;
+import org.jboss.shrinkwrap.api.spec.JavaArchive;
 import org.jboss.shrinkwrap.api.spec.WebArchive;
 import org.jboss.shrinkwrap.descriptor.api.Descriptors;
 import org.jboss.shrinkwrap.descriptor.api.persistence20.PersistenceDescriptor;
@@ -69,17 +70,8 @@ public class ProxyGenerationWithByteBuddyOnWildflyTest {
 		return war;
 	}
 
-	private static Properties readProperties() throws IOException {
-		try (InputStream propertiesStream = ProxyGenerationWithByteBuddyOnWildflyTest.class.getResourceAsStream(
-				"/hibernate.properties" )) {
-			Properties properties = new Properties();
-			properties.load( propertiesStream );
-			return properties;
-		}
-	}
-
 	@Test
-	public void testByteCodeProvider() {
+	public void testByteCodekProvider() {
 		Book saga = new Book( 1L, "Saga – Compendium One", "978-1534313460" );
 		Person brianVaughan = new Person( 1L, "Brian K. Vaughan" );
 		brianVaughan.getBooks().add( saga );
@@ -107,7 +99,7 @@ public class ProxyGenerationWithByteBuddyOnWildflyTest {
 				.excludeUnlistedClasses( true );
 
 		PersistenceDescriptor descriptor = persistenceUnit.getOrCreateProperties()
-				.createProperty().name( AvailableSettings.BYTECODE_PROVIDER ).value( "bytebuddy" ).up()
+				.createProperty().name( AvailableSettings.BYTECODE_PROVIDER ).value( "javassist" ).up()
 				.up().up();
 
 		for ( Map.Entry <Object, Object> entry : extra.entrySet() ) {
@@ -116,5 +108,13 @@ public class ProxyGenerationWithByteBuddyOnWildflyTest {
 
 		}
 		return new StringAsset( descriptor.exportAsString() );
+	}
+
+	private static Properties readProperties() throws IOException {
+		try (InputStream propertiesStream = ProxyGenerationWithByteBuddyOnWildflyTest.class.getResourceAsStream( "/hibernate.properties" )) {
+			Properties properties = new Properties();
+			properties.load( propertiesStream );
+			return properties;
+		}
 	}
 }
