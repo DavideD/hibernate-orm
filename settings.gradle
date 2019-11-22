@@ -31,7 +31,8 @@ include 'hibernate-jipijapa'
 
 include 'hibernate-orm-modules'
 
-include 'hibernate-integrationtest-bytecode'
+include ':hibernate-integrationtest-gradle-plugin:'
+include ':hibernate-integrationtest-bytecode:'
 if ( JavaVersion.current().isJava11Compatible() ) {
     include 'hibernate-integrationtest-java-modules'
 }

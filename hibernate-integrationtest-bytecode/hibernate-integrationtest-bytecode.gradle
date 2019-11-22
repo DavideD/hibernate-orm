@@ -19,13 +19,22 @@ targetCompatibility = project.baselineJavaVersion
 // Checkstyle fails for module-info
 checkstyleMain.exclude '**/module-info.java'
 
+buildscript {
+	repositories {
+		jcenter()
+		mavenCentral()
+	}
+}
+
 dependencies {
 	compile project( ':hibernate-core' )
+	provided project( ':hibernate-testing' )
 	provided libraries.jpa
 
 	provided libraries.jboss_ejb_spec_jar
 	provided libraries.jboss_annotation_spec_jar
 
+	testCompile project( ':hibernate-testing' )
 	testCompile libraries.shrinkwrap_api
 	testCompile libraries.shrinkwrap
 	testCompile libraries.shrinkwrap_descriptors_api_javaee
