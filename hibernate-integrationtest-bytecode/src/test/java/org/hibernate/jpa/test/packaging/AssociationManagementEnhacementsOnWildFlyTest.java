@@ -38,6 +38,7 @@ import org.jboss.shrinkwrap.descriptor.api.spec.se.manifest.ManifestDescriptor;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 
 //TODO: This requires some additional testing:
 // = Check the number of elements in the collection when adding the value in both directions
@@ -74,7 +75,7 @@ public class AssociationManagementEnhacementsOnWildFlyTest {
 	}
 
 	/*
-	 * I've added this test to check that if I don't rely on enhancements everything still work.
+	 * It checks the deployment is correct.
 	 */
 	@Test
 	public void testDeploymentIsWorking() throws Exception {
@@ -90,7 +91,17 @@ public class AssociationManagementEnhacementsOnWildFlyTest {
 	}
 
 	@Test
-	public void testAssociationManagementEnhancement() throws Exception {
+	public void normalBehaviour() throws Exception {
+		Book lostConnections = new Book( 5L, "Lost Connections: Why You’re Depressed and How to Find Hope", " 978-1408878729" );
+		Person johannHari = new Person( 5L, "Johann Hari" );
+		lostConnections.setAuthor( johannHari );
+		johannHari.getBooks().add( lostConnections );
+
+		assertEquals( 1, johannHari.getBooks().size() );
+	}
+
+	@Test
+	public void manyToOneEnhancement() throws Exception {
 		Book lostConnections = new Book( 5L, "Lost Connections: Why You’re Depressed and How to Find Hope", " 978-1408878729" );
 		Person johannHari = new Person( 5L, "Johann Hari" );
 		lostConnections.setAuthor( johannHari );
@@ -99,9 +110,23 @@ public class AssociationManagementEnhacementsOnWildFlyTest {
 		// johannHari.getBooks().add( lostConnections );
 		// but in this case it will work because bytecode enhancements are enabled
 
+		assertEquals( 1, johannHari.getBooks().size() );
+		assertTrue( johannHari.getBooks().contains( lostConnections ) );
+	}
+
+	@Test
+	public void oneToManyEnhancement() throws Exception {
+		Book lostConnections = new Book( 5L, "Lost Connections: Why You’re Depressed and How to Find Hope", " 978-1408878729" );
+		Person johannHari = new Person( 5L, "Johann Hari" );
+		johannHari.getBooks().add( lostConnections );
+
+		// Normally you should also have:
+		// lostConnections.setAuthor( johannHari );
+		// but in this case it will work because bytecode enhancements are enabled
+
 		assertNotNull( lostConnections.getAuthor() );
 	}
-		
+
 	private static Asset persistenceXml(Properties extra, Class<?>... classes) {
 		String[] classArray = Arrays.stream( classes )
 				.map( Class::getName )
