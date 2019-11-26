@@ -22,8 +22,9 @@
             <configuration>
                 <property name="jbossHome">${wildFlyInstallDir}</property>
                 <!-- For Remote debugging of Wildfly add the following line to the 'javaVmArguments' section below: -->
-                <!--                <property name="javaVmArguments">-Dee8.preview.mode=true -Djava.net.preferIPv4Stack=true -Djgroups.bind_addr=127.0.0.1</property>-->
-                <property name="javaVmArguments">-Dee8.preview.mode=true -Djava.net.preferIPv4Stack=true -Djgroups.bind_addr=127.0.0.1 -Xrunjdwp:transport=dt_socket,address=5005,server=y,suspend=y</property>
+                                <property name="javaVmArguments">-Dee8.preview.mode=true -Djava.net.preferIPv4Stack=true -Djgroups.bind_addr=127.0.0.1</property>
+<!--                <property name="javaVmArguments">-Dee8.preview.mode=true -Djava.net.preferIPv4Stack=true -Djgroups.bind_addr=127.0.0.1 -Xrunjdwp:transport=dt_socket,address=5005,server=y,suspend=y</property>-->
+                <property name="serverConfig">/wildfly-standalone-testing.xml</property>
             </configuration>
         </container>
     </group>

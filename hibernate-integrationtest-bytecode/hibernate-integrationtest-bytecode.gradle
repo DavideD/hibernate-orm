@@ -48,12 +48,13 @@ dependencies {
 processTestResources {
 	doLast {
 		copy {
-			from file( 'src/test/resources' )
-			into file( "${buildDir}/resources/test" )
-			include 'arquillian.xml'
-			expand wildFlyInstallDir: project( ':hibernate-orm-modules' ).wildFlyInstallDir,
-				   hibernateMajorMinorVersion: "${project.ormVersion.family}",
-				   arquillianDeploymentExportDir: "${rootProject.buildDir.absolutePath}/arquillian-deployments"
+			from file( 'src/test/resources' ) {
+				into file( "${buildDir}/resources/test" )
+				include 'arquillian.xml'
+				expand wildFlyInstallDir: project( ':hibernate-orm-modules' ).wildFlyInstallDir,
+					   hibernateMajorMinorVersion: "${project.ormVersion.family}",
+					   arquillianDeploymentExportDir: "${rootProject.buildDir.absolutePath}/arquillian-deployments"
+			}
 		}
 	}
 }

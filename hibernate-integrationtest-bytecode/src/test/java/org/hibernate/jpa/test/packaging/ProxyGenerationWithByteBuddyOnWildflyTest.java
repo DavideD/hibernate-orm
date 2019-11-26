@@ -17,6 +17,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 
 import org.hibernate.cfg.AvailableSettings;
+import org.hibernate.cfg.Environment;
 import org.hibernate.dialect.H2Dialect;
 import org.hibernate.orm.integrationtest.bytecode.controller.BytecodeService;
 import org.hibernate.orm.integrationtest.bytecode.model.Book;
@@ -71,7 +72,7 @@ public class ProxyGenerationWithByteBuddyOnWildflyTest {
 	}
 
 	@Test
-	public void testByteCodekProvider() {
+	public void testByteCodeProvider() {
 		Book saga = new Book( 1L, "Saga – Compendium One", "978-1534313460" );
 		Person brianVaughan = new Person( 1L, "Brian K. Vaughan" );
 		brianVaughan.getBooks().add( saga );
@@ -99,7 +100,7 @@ public class ProxyGenerationWithByteBuddyOnWildflyTest {
 				.excludeUnlistedClasses( true );
 
 		PersistenceDescriptor descriptor = persistenceUnit.getOrCreateProperties()
-				.createProperty().name( AvailableSettings.BYTECODE_PROVIDER ).value( "javassist" ).up()
+				.createProperty().name( AvailableSettings.BYTECODE_PROVIDER ).value( Environment.BYTECODE_PROVIDER_NAME_JAVASSIST ).up()
 				.up().up();
 
 		for ( Map.Entry <Object, Object> entry : extra.entrySet() ) {
