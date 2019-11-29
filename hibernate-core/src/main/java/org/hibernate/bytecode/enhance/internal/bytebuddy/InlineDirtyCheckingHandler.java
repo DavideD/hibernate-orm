@@ -48,7 +48,8 @@ final class InlineDirtyCheckingHandler implements Implementation, ByteCodeAppend
 			ByteBuddyEnhancementContext enhancementContext,
 			AnnotatedFieldDescription persistentField,
 			Implementation implementation) {
-		if ( enhancementContext.doDirtyCheckingInline( managedCtClass ) ) {
+		if ( enhancementContext.doDirtyCheckingInline( managedCtClass )
+				&& persistentField.asDefined().isAccessibleTo( managedCtClass ) ) {
 
 			if ( enhancementContext.isCompositeClass( managedCtClass ) ) {
 				implementation = Advice.to( CodeTemplates.CompositeDirtyCheckingHandler.class ).wrap( implementation );
