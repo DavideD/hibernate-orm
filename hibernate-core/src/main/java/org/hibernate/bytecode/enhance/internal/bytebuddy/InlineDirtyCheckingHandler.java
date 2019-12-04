@@ -63,10 +63,7 @@ final class InlineDirtyCheckingHandler implements Implementation, ByteCodeAppend
 			}
 
 			if ( enhancementContext.isCompositeClass( persistentField.getType().asErasure() )
-					&& persistentField.hasAnnotation( Embedded.class )
-					// If the field is a private field in a hierarchy, we might not be able to access it from
-					// the managedtClass
-					&& persistentField.asDefined().isAccessibleTo( managedCtClass )) {
+					&& persistentField.hasAnnotation( Embedded.class ) ) {
 
 				implementation = Advice.withCustomMapping()
 						.bind( CodeTemplates.FieldValue.class, persistentField.getFieldDescription() )

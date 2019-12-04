@@ -14,6 +14,7 @@ import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.MappedSuperclass;
 
+import org.hibernate.bytecode.enhance.internal.tracker.CompositeOwnerTracker;
 import org.hibernate.bytecode.enhance.internal.tracker.SimpleFieldTracker;
 
 import org.hibernate.testing.TestForIssue;
@@ -89,20 +90,13 @@ public class DirtyCheckingWithEmbeddableAndMappedSuperclassTest {
 		assertThat( entity )
 				.extracting( TRACKER_FIELD_NAME ).isInstanceOf( SimpleFieldTracker.class );
 		assertThat( entity.getFirstPlayerToken() )
-				.as( "Maybe you've fixed an issue: if the field is an instance of the tracker, see HHH-13764")
-				.extracting( TRACKER_COMPOSITE_FIELD_NAME ).isNull();
-		// When HHH-13764 is solved. The assertion should be:
-		//		.extracting( TRACKER_COMPOSITE_FIELD_NAME ).isInstanceOf( CompositeOwnerTracker.class);
+				.extracting( TRACKER_COMPOSITE_FIELD_NAME ).isInstanceOf( CompositeOwnerTracker.class);
 
 		assertThat( entity ).extracting( TRACKER_HAS_CHANGED_NAME ).isEqualTo( true );
 		assertThat( entity ).extracting( TRACKER_GET_NAME )
 				.isEqualTo( new String[] { "name", "firstPlayerToken" } );
 		assertThat( entity.getFirstPlayerToken() )
-				.as( "Maybe you've fixed an issue: if the content is { \"firstPlayerToken\" }," +
-							 "please, update this test accordingly. See HHH-13764")
-		//When HHH-13764 is solved. The assertion should be:
-		//		.extracting( TRACKER_COMPOSITE_FIELD_NAME + ".names" ).isEqualTo( new String[] { "firstPlayerToken" } );
-				.extracting( TRACKER_COMPOSITE_FIELD_NAME + ".names" ).isNull();
+				.extracting( TRACKER_COMPOSITE_FIELD_NAME + ".names" ).isEqualTo( new String[] { "firstPlayerToken" } );
 	}
 
 	@Test
@@ -137,9 +131,7 @@ public class DirtyCheckingWithEmbeddableAndMappedSuperclassTest {
 		assertThat( entity.getFirstPlayerToken() )
 				.as( "Maybe you've fixed an issue: if the content is { \"firstPlayerToken\" }," +
 							 "please, update this test accordingly. See HHH-13764")
-		//When HHH-13764 is solved. The assertion should be:
-		//		.extracting( TRACKER_COMPOSITE_FIELD_NAME + ".names" ).isEqualTo( new String[] { "firstPlayerToken" } );
-				.extracting( TRACKER_COMPOSITE_FIELD_NAME + ".names" ).isNull();
+				.extracting( TRACKER_COMPOSITE_FIELD_NAME + ".names" ).isEqualTo( new String[] { "firstPlayerToken" } );
 	}
 
 	@MappedSuperclass
