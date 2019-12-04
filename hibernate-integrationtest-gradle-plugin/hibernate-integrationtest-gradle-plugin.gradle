@@ -26,14 +26,14 @@ dependencies {
 	compile project( ':hibernate-core' )
 
 	provided libraries.jpa
-	testCompile libraries.assertj
+	compile libraries.assertj
 }
 
 hibernate {
 	enhance {
-		enableLazyInitialization= true
+		enableLazyInitialization= false
 		enableDirtyTracking = true
-		enableAssociationManagement = true
+		enableAssociationManagement = false
 	}
 }
 
