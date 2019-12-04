@@ -6,19 +6,15 @@
  */
 package org.hibernate.orm.integrationtest.bytecode.model.inline;
 
-import javax.persistence.Embedded;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 
 @Entity(name = "CardGame")
-public class CardGame {
+public class CardGame extends TableTopGame {
 
 	@Id
 	private String id;
 	private String name;
-
-	@Embedded
-	private Component firstPlayerToken;
 
 	public CardGame() {
 	}
@@ -26,7 +22,7 @@ public class CardGame {
 	private CardGame(String id, String name) {
 		this.id = id;
 		this.name = name;
-		this.firstPlayerToken = createEmbeddedValue( name );
+		setFirstPlayerToken( createEmbeddedValue( name ) );
 	}
 
 	public String getId() {
@@ -43,15 +39,7 @@ public class CardGame {
 
 	public void setName(String name) {
 		this.name = name;
-		this.firstPlayerToken = createEmbeddedValue( name );
-	}
-
-	public Component getFirstPlayerToken() {
-		return firstPlayerToken;
-	}
-
-	public void setFirstPlayerToken(Component firstPlayerToken) {
-		this.firstPlayerToken = firstPlayerToken;
+		setFirstPlayerToken( createEmbeddedValue( name ) );
 	}
 
 	private Component createEmbeddedValue(String name) {
