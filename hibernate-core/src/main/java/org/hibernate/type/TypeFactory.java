@@ -39,7 +39,7 @@ import org.hibernate.usertype.UserType;
  */
 @Deprecated
 @SuppressWarnings({"unchecked"})
-public final class TypeFactory implements Serializable, TypeBootstrapContext {
+public class TypeFactory implements Serializable, TypeBootstrapContext {
 	/**
 	 * @deprecated Use {@link TypeConfiguration}/{@link TypeConfiguration.Scope} instead
 	 */
