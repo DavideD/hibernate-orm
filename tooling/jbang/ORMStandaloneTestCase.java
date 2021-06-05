@@ -5,18 +5,20 @@
  */
 
 ///usr/bin/env jbang "$0" "$@" ; exit $?
-//DEPS org.hibernate:hibernate-core:${hibernate-orm.version:5.5.0.Final}
+//DEPS org.hibernate:hibernate-core:${hibernate-orm.version:5.5.0.CR1}
 //DEPS com.h2database:h2:1.4.200
 //DEPS org.assertj:assertj-core:3.13.2
 //DEPS junit:junit:4.12
 
 //DEPS org.testcontainers:postgresql:1.15.3
 //DEPS org.testcontainers:mysql:1.15.3
+//DEPS org.testcontainers:mssqlserver:1.15.3
 //
 //// Testcontainer needs the JDBC drivers to start the containers
 //// Hibernate Reactive doesn't use them
 //DEPS org.postgresql:postgresql:42.2.16
 //DEPS mysql:mysql-connector-java:8.0.25
+//DEPS com.microsoft.sqlserver:mssql-jdbc:9.2.1.jre11
 //
 
 import javax.persistence.Entity;
@@ -31,18 +33,33 @@ import org.hibernate.cfg.AvailableSettings;
 
 import org.junit.After;
 import org.junit.Before;
+import org.junit.BeforeClass;
+import org.junit.ClassRule;
+import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.JUnitCore;
 import org.junit.runner.Result;
 import org.junit.runner.notification.Failure;
 
+import org.testcontainers.containers.MSSQLServerContainer;
+
 import static org.assertj.core.api.Assertions.assertThat;
 
 public class ORMStandaloneTestCase {
 
-	private static final Database DATABASE = Database.H2;
+	private static final Database DATABASE = Database.MSSQL;
 
 	private SessionFactory factory;
+
+	@ClassRule
+	public static final MSSQLServerContainer<?> mssqlserver = new MSSQLServerContainer<>("mcr.microsoft.com/mssql/server:2019-latest")
+			.acceptLicense()
+			.withReuse( true );
+
+	@BeforeClass
+	public static void startContainer() {
+		mssqlserver.start();
+	}
 
 	/*
 	 * Create a new factory and a new schema before each test (see
@@ -58,15 +75,15 @@ public class ORMStandaloneTestCase {
 	public void createSessionFactory() {
 		StandardServiceRegistryBuilder srb = new StandardServiceRegistryBuilder()
 				// Add in any settings that are specific to your test.
-				.applySetting( AvailableSettings.URL, DATABASE.getJdbcUrl() )
+				.applySetting( AvailableSettings.URL, mssqlserver.getJdbcUrl() )
 				.applySetting( AvailableSettings.DIALECT, DATABASE.getDialect() )
 
 				// Testcontainers takes care of the JDBC drivers
 //				.applySetting( AvailableSettings.DRIVER, DATABASE.getDriver() )
 
 				// (Optional) Override credentials
-//				.applySetting( AvailableSettings.USER, "testuser" )
-//				.applySetting( AvailableSettings.PASS, "testpass" )
+				.applySetting( AvailableSettings.USER, mssqlserver.getUsername() )
+				.applySetting( AvailableSettings.PASS, mssqlserver.getPassword() )
 
 				.applySetting( AvailableSettings.HBM2DDL_AUTO, "create-drop" )
 				.applySetting( AvailableSettings.SHOW_SQL, "true" )
@@ -150,16 +167,16 @@ public class ORMStandaloneTestCase {
 	// so there is no need to set them
 	enum Database {
 		H2( "jdbc:h2:mem:db1;DB_CLOSE_DELAY=-1",
-			"org.hibernate.dialect.H2Dialect", "org.h2.Driver"
-		),
+			"org.hibernate.dialect.H2Dialect", "org.h2.Driver" ),
 
-		POSTGRESQL( "jdbc:tc:postgresql:13.3:///testdb?user=testuser&password=testpass",
-					"org.hibernate.dialect.PostgreSQL10Dialect", "org.postgresql.Driver"
-		),
+		POSTGRESQL( "jdbc:tc:postgresql:9.6.8:///testdb?user=testuser&password=testpass",
+					"org.hibernate.dialect.PostgreSQL10Dialect", "org.postgresql.Driver" ),
 
-		MYSQL( "jdbc:tc:mysql:8.0.25:///testdb?user=testuser&password=testpass",
-			   "org.hibernate.dialect.MySQLDialect", "com.mysql.jdbc.Driver"
-		);
+		MSSQL( null,
+					"org.hibernate.dialect.SQLServerDialect", "com.microsoft.sqlserver.jdbc.SQLServerDriver" ),
+
+		MYSQL( "jdbc:tc:mysql:5.7.34:///testdb?user=testuser&password=testpass",
+			   "org.hibernate.dialect.MySQLDialect", "com.mysql.jdbc.Driver" );
 
 		private final String jdbcUrl;
 		private final String driver;
@@ -201,3 +218,4 @@ public class ORMStandaloneTestCase {
 		System.out.println( result.wasSuccessful() ? "SUCCESS" : "FAILURE" );
 	}
 }
+
