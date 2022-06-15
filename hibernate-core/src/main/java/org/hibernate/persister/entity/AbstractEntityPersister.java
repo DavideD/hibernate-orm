@@ -548,7 +548,7 @@ public abstract class AbstractEntityPersister
 		return result;
 	}
 
-	SingleIdArrayLoadPlan getSQLLazySelectLoadPlan(String fetchGroup) {
+	public SingleIdArrayLoadPlan getSQLLazySelectLoadPlan(String fetchGroup) {
 		return sqlLazySelectStringsByFetchGroup.get( fetchGroup );
 	}
 
@@ -2208,6 +2208,9 @@ public abstract class AbstractEntityPersister
 	private LockingStrategy getLocker(LockMode lockMode) {
 		return lockers.computeIfAbsent( lockMode, this::generateLocker );
 	}
+
+
+
 
 	@Override
 	public void lock(
