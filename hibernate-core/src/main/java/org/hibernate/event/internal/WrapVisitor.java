@@ -46,7 +46,7 @@ public class WrapVisitor extends ProxyVisitor {
 	}
 
 	@Override
-	Object processCollection(Object collection, CollectionType collectionType)
+	protected Object processCollection(Object collection, CollectionType collectionType)
 			throws HibernateException {
 
 		if ( collection == null || collection == LazyPropertyInitializer.UNFETCHED_PROPERTY ) {
