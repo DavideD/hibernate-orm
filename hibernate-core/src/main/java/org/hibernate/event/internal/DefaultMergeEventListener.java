@@ -347,7 +347,7 @@ public class DefaultMergeEventListener
 
 	}
 
-	private static Object targetEntity(MergeEvent event, Object entity, EntityPersister persister, Object id, Object result) {
+	protected Object targetEntity(MergeEvent event, Object entity, EntityPersister persister, Object id, Object result) {
 		final EventSource source = event.getSession();
 		final String entityName = persister.getEntityName();
 		final Object target = unproxyManagedForDetachedMerging( entity, result, persister, source );
