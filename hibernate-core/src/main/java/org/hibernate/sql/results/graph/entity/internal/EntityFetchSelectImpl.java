@@ -65,7 +65,7 @@ public class EntityFetchSelectImpl extends AbstractNonJoinedEntityFetch {
 		final Initializer initializer = creationState.resolveInitializer(
 				getNavigablePath(),
 				getFetchedMapping(),
-				() -> getEntitySelectFetchInitializerBuilder(
+				() -> getEntitySelectFetchInitializer(
 						parentAccess,
 						(ToOneAttributeMapping) getFetchedMapping(),
 						getReferencedMappingContainer().getEntityPersister(),
@@ -79,11 +79,7 @@ public class EntityFetchSelectImpl extends AbstractNonJoinedEntityFetch {
 		return getEntityAssembler( initializer );
 	}
 
-	protected EntityAssembler getEntityAssembler(Initializer initializer) {
-		return new EntityAssembler( getResultJavaType(), initializer.asEntityInitializer() );
-	}
-
-	protected Initializer getEntitySelectFetchInitializerBuilder(
+	protected Initializer getEntitySelectFetchInitializer(
 			FetchParentAccess parentAccess,
 			ToOneAttributeMapping fetchedMapping,
 			EntityPersister entityPersister,
@@ -100,5 +96,9 @@ public class EntityFetchSelectImpl extends AbstractNonJoinedEntityFetch {
 				selectByUniqueKey,
 				creationState
 		);
+	}
+
+	protected DomainResultAssembler<?> getEntityAssembler(Initializer initializer) {
+		return new EntityAssembler( getResultJavaType(), initializer.asEntityInitializer() );
 	}
 }

@@ -1146,6 +1146,10 @@ public abstract class AbstractEntityInitializer extends AbstractFetchParentAcces
 		return lockMode;
 	}
 
+	protected DomainResultAssembler<?>[][] getAssemblers() {
+		return assemblers;
+	}
+
 	@Override
 	public void finishUpRow(RowProcessingState rowProcessingState) {
 		final SharedSessionContractImplementor session = rowProcessingState.getSession();
