@@ -76,6 +76,10 @@ public class EntityFetchSelectImpl extends AbstractNonJoinedEntityFetch {
 				)
 		);
 
+		return createAssembler( initializer );
+	}
+
+	private EntityAssembler createAssembler(Initializer initializer) {
 		return new EntityAssembler( getResultJavaType(), initializer.asEntityInitializer() );
 	}
 

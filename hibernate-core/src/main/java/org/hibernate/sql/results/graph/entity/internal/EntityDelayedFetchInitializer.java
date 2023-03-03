@@ -190,7 +190,7 @@ public class EntityDelayedFetchInitializer extends AbstractFetchParentAccess imp
 		return null;
 	}
 
-	private static boolean isEnhancedForLazyLoading(EntityInitializer parentEntityIntialiazer) {
+	protected static boolean isEnhancedForLazyLoading(EntityInitializer parentEntityIntialiazer) {
 		return parentEntityIntialiazer != null && parentEntityIntialiazer.getEntityDescriptor()
 				.getBytecodeEnhancementMetadata()
 				.isEnhancedForLazyLoading();
@@ -273,5 +273,9 @@ public class EntityDelayedFetchInitializer extends AbstractFetchParentAccess imp
 
 	protected boolean isSelectByUniqueKey() {
 		return selectByUniqueKey;
+	}
+
+	protected DomainResultAssembler<?> getIdentifierAssembler() {
+		return identifierAssembler;
 	}
 }
