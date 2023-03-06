@@ -45,7 +45,6 @@ import org.hibernate.metamodel.mapping.SelectableMappings;
 import org.hibernate.metamodel.mapping.SelectablePath;
 import org.hibernate.metamodel.model.domain.NavigableRole;
 import org.hibernate.metamodel.spi.EmbeddableRepresentationStrategy;
-import org.hibernate.metamodel.spi.RuntimeModelCreationContext;
 import org.hibernate.persister.entity.AttributeMappingsList;
 import org.hibernate.persister.entity.EntityPersister;
 import org.hibernate.persister.internal.MutableAttributeMappingList;
@@ -417,18 +416,15 @@ public abstract class AbstractEmbeddableMapping implements EmbeddableMappingType
 				final EntityPersister entityPersister = creationProcess.getEntityPersister( bootDescriptor.getOwner()
 						.getEntityName() );
 
-				attributeMapping = MappingModelCreationHelper.buildSingularAssociationAttributeMapping(
-						bootPropertyDescriptor.getName(),
-						navigableRole.append( bootPropertyDescriptor.getName() ),
-						attributeIndex,
+				attributeMapping = buildSingularAssociationAttributeMapping(
+						navigableRole,
+						compositeType,
+						representationStrategy,
+						creationProcess,
 						attributeIndex,
 						bootPropertyDescriptor,
-						entityPersister,
-						entityPersister,
 						(EntityType) subtype,
-						representationStrategy.resolvePropertyAccess( bootPropertyDescriptor ),
-						compositeType.getCascadeStyle( attributeIndex ),
-						creationProcess
+						entityPersister
 				);
 				columnPosition += bootPropertyDescriptor.getColumnSpan();
 			}
@@ -450,6 +446,30 @@ public abstract class AbstractEmbeddableMapping implements EmbeddableMappingType
 
 		completionCallback.success();
 		return true;
+	}
+
+	protected ToOneAttributeMapping buildSingularAssociationAttributeMapping(
+			NavigableRole navigableRole,
+			CompositeType compositeType,
+			EmbeddableRepresentationStrategy representationStrategy,
+			MappingModelCreationProcess creationProcess,
+			int attributeIndex,
+			Property bootPropertyDescriptor,
+			EntityType subtype,
+			EntityPersister entityPersister) {
+		return MappingModelCreationHelper.buildSingularAssociationAttributeMapping(
+				bootPropertyDescriptor.getName(),
+				navigableRole.append( bootPropertyDescriptor.getName() ),
+				attributeIndex,
+				attributeIndex,
+				bootPropertyDescriptor,
+				entityPersister,
+				entityPersister,
+				subtype,
+				representationStrategy.resolvePropertyAccess( bootPropertyDescriptor ),
+				compositeType.getCascadeStyle( attributeIndex ),
+				creationProcess
+		);
 	}
 
 	@Override

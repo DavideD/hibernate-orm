@@ -136,7 +136,7 @@ public class EmbeddableFetchImpl extends AbstractFetchParent implements Embeddab
 	}
 
 	@Override
-	public DomainResultAssembler createAssembler(
+	public DomainResultAssembler<?> createAssembler(
 			FetchParentAccess parentAccess,
 			AssemblerCreationState creationState) {
 		final EmbeddableInitializer initializer = creationState.resolveInitializer(
@@ -147,6 +147,10 @@ public class EmbeddableFetchImpl extends AbstractFetchParent implements Embeddab
 
 		assert initializer != null;
 
+		return createEmbeddableAssembler( initializer );
+	}
+
+	protected DomainResultAssembler<?> createEmbeddableAssembler(EmbeddableInitializer initializer) {
 		return new EmbeddableAssembler( initializer );
 	}
 

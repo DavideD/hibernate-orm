@@ -47,7 +47,7 @@ import static org.hibernate.sql.results.graph.entity.internal.BatchEntityInsideE
  */
 public abstract class AbstractEmbeddableInitializer extends AbstractFetchParentAccess implements EmbeddableInitializer,
 		ValueAccess {
-	private static final Object NULL_MARKER = new Object() {
+	protected static final Object NULL_MARKER = new Object() {
 		@Override
 		public String toString() {
 			return "Composite NULL_MARKER";
