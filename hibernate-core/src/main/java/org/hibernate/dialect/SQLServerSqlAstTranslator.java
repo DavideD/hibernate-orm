@@ -7,6 +7,7 @@
 package org.hibernate.dialect;
 
 import java.util.List;
+import java.util.function.Supplier;
 
 import org.hibernate.LockMode;
 import org.hibernate.LockOptions;
@@ -19,6 +20,7 @@ import org.hibernate.sql.ast.SqlAstJoinType;
 import org.hibernate.sql.ast.spi.SqlSelection;
 import org.hibernate.sql.ast.tree.Statement;
 import org.hibernate.sql.ast.tree.expression.BinaryArithmeticExpression;
+import org.hibernate.sql.ast.tree.expression.ColumnReference;
 import org.hibernate.sql.ast.tree.expression.Expression;
 import org.hibernate.sql.ast.tree.expression.Literal;
 import org.hibernate.sql.ast.tree.expression.SqlTuple;
@@ -36,6 +38,7 @@ import org.hibernate.sql.ast.tree.select.SelectClause;
 import org.hibernate.sql.ast.tree.select.SortSpecification;
 import org.hibernate.sql.exec.spi.JdbcOperation;
 import org.hibernate.sql.model.internal.OptionalTableUpdate;
+import org.hibernate.sql.model.internal.TableInsertStandard;
 import org.hibernate.type.SqlTypes;
 
 /**
@@ -275,6 +278,90 @@ public class SQLServerSqlAstTranslator<T extends JdbcOperation> extends SqlAstTr
 		}
 		else {
 			super.visitQuerySpec( querySpec );
+		}
+	}
+
+	@Override
+	public void visitStandardTableInsert(TableInsertStandard tableInsert) {
+		getCurrentClauseStack().push( Clause.INSERT );
+		try {
+			renderInsertInto( tableInsert );
+		}
+		finally {
+			getCurrentClauseStack().pop();
+		}
+	}
+
+	private void renderInsertInto(TableInsertStandard tableInsert) {
+		applySqlComment( tableInsert.getMutationComment() );
+
+		if ( tableInsert.getNumberOfValueBindings() == 0 ) {
+			renderInsertIntoNoColumns( tableInsert );
+			return;
+		}
+
+		renderIntoIntoAndTable( tableInsert );
+
+		tableInsert.forEachValueBinding( (columnPosition, columnValueBinding) -> {
+			if ( columnPosition == 0 ) {
+				appendSql( '(' );
+			}
+			else {
+				appendSql( ',' );
+			}
+			appendSql( columnValueBinding.getColumnReference().getColumnExpression() );
+		} );
+		appendSql( ") " );
+		visitOutput( tableInsert );
+
+		getCurrentClauseStack().push( Clause.VALUES );
+		try {
+			appendSql( " values (" );
+
+			tableInsert.forEachValueBinding( (columnPosition, columnValueBinding) -> {
+				if ( columnPosition > 0 ) {
+					appendSql( ',' );
+				}
+				columnValueBinding.getValueExpression().accept( this );
+			} );
+		}
+		finally {
+			getCurrentClauseStack().pop();
+		}
+
+		appendSql( ")" );
+	}
+
+	private void visitOutput(TableInsertStandard tableInsert) {
+		if ( tableInsert.getNumberOfReturningColumns() > 0 ) {
+			appendSql( "output inserted." );
+			visitReturningColumns( tableInsert::getReturningColumns );
+		}
+	}
+
+	@Override
+	protected void visitReturningColumns(Supplier<List<ColumnReference>> returningColumnsAccess) {
+		final List<ColumnReference> returningColumns = returningColumnsAccess.get();
+
+		if ( returningColumns.isEmpty() ) {
+			return;
+		}
+
+		visitReturningColumns( returningColumns );
+	}
+
+	@Override
+	protected void visitReturningColumns(List<ColumnReference> returningColumns) {
+		final int size = returningColumns.size();
+		if ( size == 0 ) {
+			return;
+		}
+
+		String separator = "";
+		for ( int i = 0; i < size; i++ ) {
+			appendSql( separator );
+			appendSql( returningColumns.get( i ).getColumnExpression() );
+			separator = COMA_SEPARATOR;
 		}
 	}
 
