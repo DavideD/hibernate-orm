@@ -3321,7 +3321,7 @@ public abstract class AbstractEntityPersister
 		initPropertyPaths( mapping );
 	}
 
-	private void doLateInit() {
+	protected void doLateInit() {
 		if ( isIdentifierAssignedByInsert() ) {
 			final OnExecutionGenerator generator = (OnExecutionGenerator) getGenerator();
 			identityDelegate = generator.getGeneratedIdentifierDelegate( this );
@@ -3586,7 +3586,7 @@ public abstract class AbstractEntityPersister
 	}
 
 	@Override
-	public final void postInstantiate() throws MappingException {
+	public void postInstantiate() throws MappingException {
 		doLateInit();
 		if ( hasNamedQueryLoader() ) {
 			// We must resolve the named query on-demand through the boot model because it isn't initialized yet
