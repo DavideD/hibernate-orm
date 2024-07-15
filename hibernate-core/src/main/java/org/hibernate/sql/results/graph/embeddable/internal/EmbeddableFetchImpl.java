@@ -88,8 +88,8 @@ public class EmbeddableFetchImpl extends AbstractFetchParent
 	 * For Hibernate Reactive
 	 */
 	protected EmbeddableFetchImpl(EmbeddableFetchImpl original) {
-		super( original.getNavigablePath() );
-		this.fetchContainer = original.getFetchContainer();
+		super( original );
+		fetchContainer = original.getFetchContainer();
 		fetchParent = original.fetchParent;
 		fetchTiming = original.fetchTiming;
 		tableGroup = original.tableGroup;
@@ -152,7 +152,9 @@ public class EmbeddableFetchImpl extends AbstractFetchParent
 	public DomainResultAssembler<?> createAssembler(
 			InitializerParent<?> parent,
 			AssemblerCreationState creationState) {
-		return new EmbeddableAssembler( creationState.resolveInitializer( this, parent, this ).asEmbeddableInitializer() );
+		Initializer<?> initializer = creationState.resolveInitializer( this, parent, this );
+		EmbeddableInitializer<?> embeddableInitializer = initializer.asEmbeddableInitializer();
+		return new EmbeddableAssembler( embeddableInitializer );
 	}
 
 	@Override
@@ -176,5 +178,9 @@ public class EmbeddableFetchImpl extends AbstractFetchParent
 	@Override
 	public FetchParent asFetchParent() {
 		return this;
+	}
+
+	protected BasicFetch<?> getDiscriminatorFetch() {
+		return discriminatorFetch;
 	}
 }
