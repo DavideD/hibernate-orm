@@ -6,6 +6,7 @@
  */
 package org.hibernate.jpa;
 
+
 import static org.hibernate.internal.HEMLogging.messageLogger;
 
 import java.net.URL;

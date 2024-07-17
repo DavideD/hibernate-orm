@@ -62,6 +62,15 @@ public class CircularFetchImpl extends AbstractNonJoinedEntityFetch implements B
 		this.referencedNavigablePath = referencedNavigablePath;
 	}
 
+	/*
+	 * Used by Hibernate Reactive
+	 */
+	protected CircularFetchImpl(CircularFetchImpl original) {
+		super( original );
+		this.timing = original.timing;
+		this.referencedNavigablePath = original.referencedNavigablePath;
+	}
+
 	@Override
 	public NavigablePath getReferencedPath() {
 		return referencedNavigablePath;

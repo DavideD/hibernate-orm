@@ -78,7 +78,6 @@ import org.checkerframework.checker.nullness.qual.Nullable;
 import static org.hibernate.bytecode.enhance.spi.LazyPropertyInitializer.UNFETCHED_PROPERTY;
 import static org.hibernate.engine.internal.ManagedTypeHelper.asPersistentAttributeInterceptable;
 import static org.hibernate.engine.internal.ManagedTypeHelper.isPersistentAttributeInterceptable;
-import static org.hibernate.internal.log.LoggingHelper.toLoggableString;
 import static org.hibernate.metamodel.mapping.ForeignKeyDescriptor.Nature.TARGET;
 import static org.hibernate.proxy.HibernateProxy.extractLazyInitializer;
 
@@ -426,15 +425,6 @@ public class EntityInitializerImpl extends AbstractInitializer<EntityInitializer
 				else {
 					initializer.resolveInstance( subInstance, rowProcessingState );
 				}
-			}
-		}
-	}
-
-	private void notifySubInitializersToReusePreviousRowInstance(EntityInitializerData data) {
-		final RowProcessingState rowProcessingState = data.getRowProcessingState();
-		for ( Initializer<?> initializer : subInitializers[data.concreteDescriptor.getSubclassId()] ) {
-			if ( initializer != null ) {
-				initializer.resolveFromPreviousRow( rowProcessingState );
 			}
 		}
 	}

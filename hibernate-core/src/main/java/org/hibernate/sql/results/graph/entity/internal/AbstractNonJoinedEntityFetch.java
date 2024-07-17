@@ -68,6 +68,18 @@ public abstract class AbstractNonJoinedEntityFetch implements EntityFetch,
 		this.selectByUniqueKey = selectByUniqueKey;
 	}
 
+	/*
+	 * Used by Hibernate Reactive
+	 */
+	protected AbstractNonJoinedEntityFetch(AbstractNonJoinedEntityFetch original) {
+		this.navigablePath = original.navigablePath;
+		this.fetchedModelPart = original.fetchedModelPart;
+		this.fetchParent = original.fetchParent;
+		this.keyResult = original.keyResult;
+		this.discriminatorFetch = original.discriminatorFetch;
+		this.selectByUniqueKey = original.selectByUniqueKey;
+	}
+
 	@Override
 	public NavigablePath getNavigablePath() {
 		return navigablePath;
