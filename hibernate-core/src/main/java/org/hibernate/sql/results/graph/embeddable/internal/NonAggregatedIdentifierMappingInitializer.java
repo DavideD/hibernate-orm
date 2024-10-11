@@ -188,6 +188,11 @@ public class NonAggregatedIdentifierMappingInitializer extends AbstractInitializ
 		this.hasLazySubInitializer = hasLazySubInitializers;
 	}
 
+	// For Hibernate Reactive
+	protected DomainResultAssembler<?>[] getAssemblers() {
+		return assemblers;
+	}
+
 	@Override
 	public EmbeddableValuedModelPart getInitializedPart() {
 		return embedded;
