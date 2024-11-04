@@ -86,17 +86,19 @@ public class GeneratorBinder {
 	private static final CoreMessageLogger LOG = CoreLogging.messageLogger( GeneratorBinder.class );
 
 	public static final String ASSIGNED_GENERATOR_NAME = "assigned";
-	public static final GeneratorCreator ASSIGNED_IDENTIFIER_GENERATOR_CREATOR =
-			new GeneratorCreator() {
-				@Override
-				public Generator createGenerator(GeneratorCreationContext context) {
-					return new Assigned();
-				}
-				@Override
-				public boolean isAssigned() {
-					return true;
-				}
-			};
+	public static final GeneratorCreator ASSIGNED_IDENTIFIER_GENERATOR_CREATOR = new AssignedIdentifierGeneratorCreator();
+
+	private static class AssignedIdentifierGeneratorCreator implements GeneratorCreator {
+		@Override
+		public Generator createGenerator(GeneratorCreationContext context) {
+			return new Assigned();
+		}
+
+		@Override
+		public boolean isAssigned() {
+			return true;
+		}
+	}
 
 	/**
 	 * Create a generator, based on a {@link GeneratedValue} annotation.
