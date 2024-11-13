@@ -95,7 +95,16 @@ public class UnionSubclassEntityPersister extends AbstractEntityPersister {
 			final EntityDataAccess cacheAccessStrategy,
 			final NaturalIdDataAccess naturalIdRegionAccessStrategy,
 			final RuntimeModelCreationContext creationContext) throws HibernateException {
-		super( persistentClass, cacheAccessStrategy, naturalIdRegionAccessStrategy, creationContext );
+		this( persistentClass, cacheAccessStrategy, naturalIdRegionAccessStrategy, creationContext, new EntityMetamodelFactory() );
+	}
+
+	public UnionSubclassEntityPersister(
+			final PersistentClass persistentClass,
+			final EntityDataAccess cacheAccessStrategy,
+			final NaturalIdDataAccess naturalIdRegionAccessStrategy,
+			final RuntimeModelCreationContext creationContext,
+			final EntityMetamodelFactory entityMetamodelFactory) throws HibernateException {
+		super( persistentClass, cacheAccessStrategy, naturalIdRegionAccessStrategy, creationContext, entityMetamodelFactory );
 
 		validateGenerator();
 

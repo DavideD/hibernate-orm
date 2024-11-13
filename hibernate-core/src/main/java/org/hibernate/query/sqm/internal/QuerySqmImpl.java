@@ -612,6 +612,7 @@ public class QuerySqmImpl<R>
 		boolean useMultiTableInsert = persister.hasMultipleTables();
 		if ( !useMultiTableInsert && !isSimpleValuesInsert( sqmInsert, persister ) ) {
 			final Generator identifierGenerator = persister.getGenerator();
+
 			if ( identifierGenerator instanceof BulkInsertionCapableIdentifierGenerator
 					&& identifierGenerator instanceof OptimizableGenerator ) {
 				final Optimizer optimizer = ( (OptimizableGenerator) identifierGenerator ).getOptimizer();
