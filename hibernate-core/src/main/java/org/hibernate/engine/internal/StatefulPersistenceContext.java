@@ -324,12 +324,17 @@ class StatefulPersistenceContext implements PersistenceContext {
 	@Override
 	public Object[] getDatabaseSnapshot(Object id, EntityPersister persister) throws HibernateException {
 		final EntityKey key = session.generateEntityKey( id, persister );
+		return getDatabaseSnapshot( key, () -> persister.getDatabaseSnapshot( id, session ) );
+	}
+
+	@Override
+	public Object[] getDatabaseSnapshot(EntityKey key, Supplier<Object[]> snapshotSupplier) {
 		final Object cached = entitySnapshotsByKey == null ? null : entitySnapshotsByKey.get( key );
 		if ( cached != null ) {
 			return cached == NO_ROW ? null : (Object[]) cached;
 		}
 		else {
-			final Object[] snapshot = persister.getDatabaseSnapshot( id, session );
+			final Object[] snapshot = snapshotSupplier.get();
 			if ( entitySnapshotsByKey == null ) {
 				entitySnapshotsByKey = CollectionHelper.mapOfSize( INIT_COLL_SIZE );
 			}
@@ -1187,7 +1192,8 @@ class StatefulPersistenceContext implements PersistenceContext {
 		initializeNonLazyCollections( PersistentCollection::forceInitialization );
 	}
 
-	protected void initializeNonLazyCollections(Consumer<PersistentCollection<?>> initializeAction ) {
+	@Override
+	public void initializeNonLazyCollections(Consumer<PersistentCollection<?>> initializeAction) {
 		if ( loadCounter == 0 ) {
 			LOG.trace( "Initializing non-lazy collections" );
 

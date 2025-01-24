@@ -130,6 +130,8 @@ public interface PersistenceContext {
 	 */
 	Object[] getDatabaseSnapshot(Object id, EntityPersister persister);
 
+	Object[] getDatabaseSnapshot(EntityKey key, Supplier<Object[]> snapshotSupplier);
+
 	/**
 	 * Retrieve the cached database snapshot for the requested entity key.
 	 * <p>
@@ -443,6 +445,8 @@ public interface PersistenceContext {
 	 * is the "outermost" load)
 	 */
 	void initializeNonLazyCollections() throws HibernateException;
+
+	void initializeNonLazyCollections(Consumer<PersistentCollection<?>> initializeAction);
 
 	/**
 	 * Get the {@code PersistentCollection} object for an array
