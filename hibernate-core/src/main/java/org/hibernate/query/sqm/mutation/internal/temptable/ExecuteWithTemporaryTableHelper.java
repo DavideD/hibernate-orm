@@ -401,8 +401,7 @@ public final class ExecuteWithTemporaryTableHelper {
 				);
 				break;
 			case DROP:
-				doWork( executionContext,
-						new TemporaryTableDropWork( temporaryTable, factory ) );
+				doWork( executionContext, new TemporaryTableDropWork( temporaryTable, factory ) );
 		}
 	}
 
